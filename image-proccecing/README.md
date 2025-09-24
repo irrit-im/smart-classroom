@@ -1,7 +1,7 @@
 # Cropping
 Scanning a document from a PNG image in Python typically involves image processing techniques to detect the document, correct its perspective, and enhance its appearance. Libraries like OpenCV are commonly used for this.
 
-# ecognition
+# Recognition
 ## For General Image Processing and Computer Vision:
 * `OpenCV` (Open Source Computer Vision Library): A highly versatile and widely used library for real-time computer vision and image processing tasks. It offers extensive functionalities including object detection, facial recognition, image manipulation, and feature detection.
 * `Pillow` (PIL Fork): An accessible library for basic image manipulation tasks such as opening, resizing, cropping, rotating, and saving images in various formats. It's ideal for simpler image processing needs.
