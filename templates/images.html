@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Captured Images</title>
+</head>
+
+<body>
+
+<a href="/">
+<button>Home</button>
+</a>
+
+<h2>Captured Images</h2>
+
+<a href="/capture">
+<button>Capture New Image</button>
+</a>
+
+<ul>
+
+{% for img in images %}
+
+<li>
+<a href="/image/{{img}}">
+{{img}}
+</a>
+</li>
+
+{% endfor %}
+
+</ul>
+
+</body>
+</html>

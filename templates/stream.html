@@ -1,0 +1,14 @@
+<h1>Video Stream</h1>
+
+<img id="stream" src="/video_feed">
+
+<br><br>
+
+<button onclick="goHome()">Home</button>
+
+<script>
+function goHome() {
+    document.getElementById("stream").src = "";
+    window.location.href = "/";
+}
+</script>
