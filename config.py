@@ -1,6 +1,6 @@
 # servo gpio
-SERVO_X_PIN = 12
-SERVO_Y_PIN = 13
+SERVO_X_PIN = 13
+SERVO_Y_PIN = 12
 
 # relative path to where images are saved
 IMAGE_DIR = "images"

@@ -78,6 +78,11 @@ libbluetooth-dev \
 libcap-dev
 ```
 
+sudo apt install pigpio-tools python3-pigpio
+Start the daemon:
+sudo systemctl start pigpiod
+sudo systemctl enable pigpiod
+
 ## 4. Enable the Bluetooth service
 
 ```bash

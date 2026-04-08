@@ -1,14 +1,51 @@
-<h1>Video Stream</h1>
+<html>
+<head>
+<title>Video Stream</title>
+</head>
 
-<img id="stream" src="/video_feed">
+<body>
+
+<a href="/">
+<button>Home</button>
+</a>
+
+<h2>Live Stream</h2>
+
+<img id="stream" src="/video_feed" width="640">
 
 <br><br>
 
-<button onclick="goHome()">Home</button>
+<label>PAN:</label>
+<input type="range" id="panSlider" min="1" max="180" value="90">
+
+<br><br>
+
+<label>TILT:</label>
+<input type="range" id="tiltSlider" min="1" max="180" value="90">
 
 <script>
-function goHome() {
-    document.getElementById("stream").src = "";
-    window.location.href = "/";
+
+function sendServoUpdate() {
+
+    let pan = document.getElementById("panSlider").value;
+    let tilt = document.getElementById("tiltSlider").value;
+
+    fetch("/move_servo", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            pan: pan,
+            tilt: tilt
+        })
+    });
 }
+
+document.getElementById("panSlider").addEventListener("input", sendServoUpdate);
+document.getElementById("tiltSlider").addEventListener("input", sendServoUpdate);
+
 </script>
+
+</body>
+</html>
