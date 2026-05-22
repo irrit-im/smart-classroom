@@ -3,8 +3,8 @@ import pigpio
 
 class ServoController:
 
-    PAN_PIN = 18 #TODO: get this from the configurations file
-    TILT_PIN = 13
+    PAN_PIN = 13 #TODO: get this from the configurations file
+    TILT_PIN = 12
 
     MIN_ANGLE = 1
     MAX_ANGLE = 180

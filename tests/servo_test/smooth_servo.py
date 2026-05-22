@@ -5,7 +5,7 @@ import time
 # Configuration
 # =========================
 
-SERVO_PIN = 12        # Change this to your GPIO pin
+SERVO_PIN = 12
 STEP_DEGREES = 45     # Movement step
 PAUSE_SECONDS = 1     # Pause between moves
 
@@ -38,7 +38,7 @@ def main():
     try:
 
         # Move through angles
-        for angle in range(0, 181, STEP_DEGREES):
+        for angle in range(45,136, STEP_DEGREES):
 
             pulsewidth = angle_to_pulsewidth(angle)
 
