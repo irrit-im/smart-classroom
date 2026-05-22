@@ -36,6 +36,7 @@ class CameraController:
 
             with self.lock:
                 self.frame = frame
+        time.sleep(0.01)           
 
     def get_frame(self):
 
