@@ -1,6 +1,6 @@
 import time
 
-def generate_stream(camera):
+def generate_stream(camera: CameraController):
 
     while True:
 
