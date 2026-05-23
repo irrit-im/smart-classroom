@@ -10,8 +10,8 @@ class ControlMode(Enum):
 
 class ServoController:
 
-    config.SERVO_X_PIN = 13 
-    config.SERVO_Y_PIN = 12
+    PAN_PIN = config.SERVO_X_PIN 
+    TILT_PIN  = config.SERVO_Y_PIN 
 
     MIN_ANGLE = 1
     MAX_ANGLE = 180
