@@ -1,11 +1,11 @@
 import serial
 from typing import Optional
-
+import config
 
 class BTListener:
     def __init__(
         self,
-        port: str = "/dev/rfcomm0",
+        port: str = config.BT_PORT,
         on_msg: callable = None,
     ):
         self.port = port
