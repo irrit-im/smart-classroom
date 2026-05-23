@@ -1,6 +1,6 @@
 import pigpio
 from enum import Enum
-
+import config
 
 class ControlMode(Enum):
     NONE = "none"
@@ -10,8 +10,8 @@ class ControlMode(Enum):
 
 class ServoController:
 
-    PAN_PIN = 13  # TODO: get this from the configurations file
-    TILT_PIN = 12
+    config.SERVO_X_PIN = 13 
+    config.SERVO_Y_PIN = 12
 
     MIN_ANGLE = 1
     MAX_ANGLE = 180
