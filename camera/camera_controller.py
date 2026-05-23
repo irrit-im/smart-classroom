@@ -19,7 +19,7 @@ class CameraController:
         )
 
         self.picam2.start()
-        self.picam2.set_controls({"FrameRate": 4})
+        self.picam2.set_controls({"FrameRate": config.FRAME_RATE})
 
         time.sleep(2)
 
