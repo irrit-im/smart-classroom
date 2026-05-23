@@ -6,8 +6,8 @@ SERVO_Y_PIN = 12
 IMAGE_DIR = "images"
 
 # camera resolution
-CAM_WIDTH = 1280
-CAM_HEIGHT = 720
+CAM_WIDTH = 640
+CAM_HEIGHT = 480
 
 # bluetooth port
 BT_PORT = "/dev/rfcomm0"
