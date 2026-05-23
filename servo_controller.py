@@ -50,14 +50,6 @@ class ServoController:
         self.tilt_angle = angle
         self.move_servo(self.TILT_PIN, angle)
 
-    def step_pan(self, delta):
-
-        self.move_pan(self.pan_angle + delta)
-
-    def step_tilt(self, delta):
-
-        self.move_tilt(self.tilt_angle + delta)
-
     def idle_all(self):
 
         self.pi.set_servo_pulsewidth(self.PAN_PIN, 0)
