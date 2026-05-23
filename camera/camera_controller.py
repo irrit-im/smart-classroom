@@ -3,6 +3,7 @@ import cv2
 import threading
 import time
 import os
+import config
 
 
 class CameraController:
@@ -13,7 +14,7 @@ class CameraController:
 
         self.picam2.configure(
             self.picam2.create_preview_configuration(
-                main={"format": "XRGB8888", "size": (640, 480)}
+                main={"format": "XRGB8888", "size": (config.CAM_WIDTH, config.CAM_HIGHT)}
             )
         )
 
