@@ -41,7 +41,7 @@ class ServoController:
         self.pi.set_servo_pulsewidth(pin, pulse)
 
     def move_pan(self, angle):
-
+        angle = 180-angle
         self.pan_angle = angle
         self.move_servo(self.PAN_PIN, angle)
 

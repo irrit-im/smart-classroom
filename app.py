@@ -12,6 +12,7 @@ from camera.camera_controller import CameraController
 from camera.streamer import generate_stream
 from bt_listener import BTListener
 from servo_controller import ServoController, ControlMode
+from lcd_adress_display import lcd_display
 
 import os
 import threading
@@ -208,7 +209,7 @@ def set_servo_control_mode():
     })
 
 if __name__ == "__main__":
-
     start_bt_listener()
     get_camera()
+    lcd_display()
     app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)

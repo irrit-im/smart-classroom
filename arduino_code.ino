@@ -14,7 +14,7 @@
 
 #define voiceRecognitionRX 2 // Voice recognition pins
 #define voiceRecognitionTX 3
-#define voiceCommandCount 3 // Number of voice commands stored in the system
+#define voiceCommandCount 7 // Number of voice commands stored in the system
  
 String photo_command = "photo\n"; // BT to Raspberry
  
@@ -52,6 +52,14 @@ void setupVoiceRecognition(){
   records[0] = 0; // "צלם"
   records[1] = 1; // "On"
   records[2] = 2; // דו 4
+  records[3] = 3; // צלם
+  records[4] = 4; // צלם בקול של עידית
+  records[5] = 5; // עוד וריאציה של צלם
+  records[6] = 7; // עוד וריאציה של צלם
+
+
+
+
  
   for (int i = 0; i < voiceCommandCount; i++) { // Loading commands into module memory
     if (myVR.load(records[i]) >= 0) { // Checks if record can be loaded
