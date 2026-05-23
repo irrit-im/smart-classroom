@@ -5,14 +5,15 @@ import time
 # Configuration
 # =========================
 
-SERVO_PIN = 12        # Change this to your GPIO pin
-STEP_DEGREES = 45     # Movement step
-PAUSE_SECONDS = 1     # Pause between moves
+SERVO_PIN = 13  # Change this to your GPIO pin
+STEP_DEGREES = 45  # Movement step
+PAUSE_SECONDS = 1  # Pause between moves
 
 
 # =========================
 # Helper functions
 # =========================
+
 
 def angle_to_pulsewidth(angle):
     """
@@ -25,6 +26,7 @@ def angle_to_pulsewidth(angle):
 # =========================
 # Main test
 # =========================
+
 
 def main():
     pi = pigpio.pi()
@@ -59,7 +61,6 @@ def main():
             pi.set_servo_pulsewidth(SERVO_PIN, pulsewidth)
 
             time.sleep(PAUSE_SECONDS)
-
 
         print("Cycle complete. Idling servo.")
 

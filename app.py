@@ -11,22 +11,27 @@ from flask import (
 from camera.camera_controller import CameraController
 from camera.streamer import generate_stream
 from bt_listener import BTListener
-from servo.servo_controller import ServoController
+from servo_controller import ServoController, ControlMode
 
 import os
 import threading
 import time
+import re
+
+SERVO_STEP = 20
+SERVO_THRESHHOLD = 10
+IMAGE_DIR = "images"
+os.makedirs(IMAGE_DIR, exist_ok=True)
+
+servo_control_mode = ControlMode.NONE
 
 app = Flask(__name__)
 
 camera = None
 servo = None
 
-IMAGE_DIR = "images"
-os.makedirs(IMAGE_DIR, exist_ok=True)
 
-
-def get_camera():
+def get_camera() -> CameraController:
     global camera
 
     if camera is None:
@@ -35,7 +40,7 @@ def get_camera():
     return camera
 
 
-def get_servo_controller():
+def get_servo_controller() -> ServoController:
     global servo
 
     if servo is None:
@@ -44,27 +49,48 @@ def get_servo_controller():
     return servo
 
 
-def handle_bt_line(line):
+def joystick_to_servo_pos(deg: int) -> int:
+    return min(180, max(1, deg/512 * 180))
+
+def handle_photo_command() -> None:
+    camera = get_camera()
+    # wait until first frame is ready
+    while camera.get_frame() is None:
+        time.sleep(0.1)
+
+    filename = camera.capture_image(IMAGE_DIR)
+
+    print("Captured image")
+
+
+def handle_servo_command(command: str) -> None:
+
+    global servo_control_mode
+
+    if servo_control_mode != ControlMode.BT:
+        return
+
+    cords = command.split(",")
+    x = joystick_to_servo_pos(int(cords[0]))
+    y = joystick_to_servo_pos(int(cords[1]))
+
+    servo = get_servo_controller()
+    
+    servo.move_pan(x)
+    servo.move_tilt(y)
+    
+
+def handle_bt_line(line) -> None:
 
     command = line.strip().lower()
 
     print(f"BT Command: {command}")
 
     if command == "photo":
+        handle_photo_command()
 
-        camera = get_camera()
-
-        # wait until first frame is ready
-        while camera.get_frame() is None:
-            time.sleep(0.1)
-
-        filename = camera.capture_image(IMAGE_DIR)
-
-        print("Captured image")
-
-    elif command == "servo_test":
-
-        print("Future servo functionality goes here")
+    else:
+        handle_servo_command(command)
 
 
 bt_listener = BTListener(on_msg=handle_bt_line)
@@ -129,20 +155,57 @@ def serve_image(filename):
 
     return send_from_directory(IMAGE_DIR, filename)
 
-
 @app.route("/move_servo", methods=["POST"])
 def move_servo():
+
+    global servo_control_mode
+
+    print("move_servo route called")
+    print(f"Current mode: {servo_control_mode}")
+
+    if servo_control_mode != ControlMode.WEB:
+        return jsonify({"status": "ignored"})
 
     data = request.json
 
     pan = int(data.get("pan", 90))
     tilt = int(data.get("tilt", 90))
 
+    print(f"Pan={pan}, Tilt={tilt}")
+
     get_servo_controller().move_pan(pan)
     get_servo_controller().move_tilt(tilt)
 
     return jsonify({"status": "success"})
 
+@app.route("/servo_control_mode", methods=["POST"])
+def set_servo_control_mode():
+
+    global servo_control_mode
+
+    mode = request.json.get("mode")
+
+    if mode == "none":
+        servo_control_mode = ControlMode.NONE
+
+    elif mode == "web":
+        servo_control_mode = ControlMode.WEB
+
+    elif mode == "bt":
+        servo_control_mode = ControlMode.BT
+
+    else:
+        return jsonify({"status": "error"}), 400
+
+    print(f"Mode changed to {servo_control_mode}")
+
+    if servo_control_mode == ControlMode.NONE:
+        get_servo_controller().idle_all()
+
+    return jsonify({
+        "status": "success",
+        "mode": servo_control_mode.value
+    })
 
 if __name__ == "__main__":
 

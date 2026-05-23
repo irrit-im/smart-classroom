@@ -1,9 +1,16 @@
 import pigpio
+from enum import Enum
+
+
+class ControlMode(Enum):
+    NONE = "none"
+    WEB = "web"
+    BT = "bt"
 
 
 class ServoController:
 
-    PAN_PIN = 13 #TODO: get this from the configurations file
+    PAN_PIN = 13  # TODO: get this from the configurations file
     TILT_PIN = 12
 
     MIN_ANGLE = 1
@@ -42,6 +49,14 @@ class ServoController:
 
         self.tilt_angle = angle
         self.move_servo(self.TILT_PIN, angle)
+
+    def step_pan(self, delta):
+
+        self.move_pan(self.pan_angle + delta)
+
+    def step_tilt(self, delta):
+
+        self.move_tilt(self.tilt_angle + delta)
 
     def idle_all(self):
 

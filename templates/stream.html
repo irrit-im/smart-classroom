@@ -1,12 +1,12 @@
 <html>
 <head>
-<title>Video Stream</title>
+    <title>Video Stream</title>
 </head>
 
 <body>
 
 <a href="/">
-<button>Home</button>
+    <button>Home</button>
 </a>
 
 <h2>Live Stream</h2>
@@ -15,13 +15,35 @@
 
 <br><br>
 
+<label>Control Mode:</label>
+
+<select id="controlMode">
+    <option value="none">Idle</option>
+    <option value="web">Web Sliders</option>
+    <option value="bt">Bluetooth</option>
+</select>
+
+<br><br>
+
 <label>PAN:</label>
-<input type="range" id="panSlider" min="1" max="180" value="90">
+<input
+    type="range"
+    id="panSlider"
+    min="1"
+    max="180"
+    value="90"
+>
 
 <br><br>
 
 <label>TILT:</label>
-<input type="range" id="tiltSlider" min="1" max="180" value="90">
+<input
+    type="range"
+    id="tiltSlider"
+    min="1"
+    max="180"
+    value="90"
+>
 
 <script>
 
@@ -42,8 +64,44 @@ function sendServoUpdate() {
     });
 }
 
-document.getElementById("panSlider").addEventListener("input", sendServoUpdate);
-document.getElementById("tiltSlider").addEventListener("input", sendServoUpdate);
+function updateControlMode() {
+
+    let mode = document.getElementById("controlMode").value;
+
+    let disabled = mode !== "web";
+
+    document.getElementById("panSlider").disabled = disabled;
+    document.getElementById("tiltSlider").disabled = disabled;
+
+    fetch("/servo_control_mode", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            mode: mode
+        })
+    });
+}
+
+document
+    .getElementById("panSlider")
+    .addEventListener("input", sendServoUpdate);
+
+document
+    .getElementById("tiltSlider")
+    .addEventListener("input", sendServoUpdate);
+
+document
+    .getElementById("controlMode")
+    .addEventListener("change", updateControlMode);
+
+/*
+ * Initialize page state.
+ * Default dropdown option is "Idle",
+ * so disable the sliders on page load.
+ */
+updateControlMode();
 
 </script>
 
