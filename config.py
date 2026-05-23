@@ -8,6 +8,7 @@ IMAGE_DIR = "images"
 # camera resolution
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
+FRAME_RATE = 4
 
 # bluetooth port
 BT_PORT = "/dev/rfcomm0"
