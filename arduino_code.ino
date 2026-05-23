@@ -82,8 +82,8 @@ void setup() {
 }
  
 void readJoystick(){
-  xPlace = map(analogRead(xAxisPin),0,874,0,100); // Converts joystick values ​​from a range of 0-874 to 0 to 100
-  yPlace = map(analogRead(yAxisPin),0,874,0,100);
+  xPlace = analogRead(xAxisPin);
+  yPlace = analogRead(yAxisPin);
 }
  
 void sendJoystickBluetooth() {
@@ -91,6 +91,11 @@ void sendJoystickBluetooth() {
   hc05.print(",");
   hc05.print(yPlace);
   hc05.print("\n");
+  Serial.print(xPlace); // Sends joystick values
+  Serial.print(",");
+  Serial.print(yPlace);
+  Serial.print("\n");
+  blinkLEDColor("blue");
 }
  
 void blinkLEDColor(String color) {
@@ -98,6 +103,11 @@ void blinkLEDColor(String color) {
     digitalWrite(R_PIN, HIGH); // Color purple = red + blue
     digitalWrite(G_PIN, LOW);
     digitalWrite(B_PIN, HIGH);
+  }
+  if (color == "blue") {
+    analogWrite(R_PIN, 0);
+    analogWrite(G_PIN, 0);
+    analogWrite(B_PIN, 255);
   }
   delay(1000); // Light on for a second
   digitalWrite(R_PIN, LOW); // Turn off RGB LED
