@@ -55,7 +55,7 @@ void setupVoiceRecognition(){
   records[3] = 3; // צלם
   records[4] = 4; // צלם בקול של עידית
   records[5] = 5; // עוד וריאציה של צלם
-  records[6] = 7; // עוד וריאציה של צלם
+  records[6] = 6; // עוד וריאציה של צלם
 
 
 
