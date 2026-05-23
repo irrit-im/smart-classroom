@@ -10,7 +10,7 @@ CAM_WIDTH = 1280
 CAM_HEIGHT = 720
 
 # bluetooth port
-BT_PORT = 1
+BT_PORT = "/dev/rfcomm0"
 
 # lcd ports
 # sda - GPIO2
