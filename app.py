@@ -17,10 +17,7 @@ from lcd_adress_display import lcd_display
 import os
 import threading
 import time
-import re
 
-SERVO_STEP = 20
-SERVO_THRESHHOLD = 10
 IMAGE_DIR = "images"
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
