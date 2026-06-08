@@ -90,16 +90,16 @@ def handle_servo_command(command: str) -> None:
     if abs(x_offset) > abs(y_offset):
 
         if x_offset > 0:
-            servo.move_pan(servo.pan + config.STEP_SIZE)
+            servo.move_pan(servo.pan + config.config.STEP_SIZE)
         else:
-            servo.move_pan(servo.pan - config.STEP_SIZE)
+            servo.move_pan(servo.pan - config.config.STEP_SIZE)
 
     elif abs(y_offset) > 0:
 
         if y_offset > 0:
-            servo.move_tilt(servo.tilt - config.STEP_SIZE)
+            servo.move_tilt(servo.tilt - config.config.STEP_SIZE)
         else:
-            servo.move_tilt(servo.tilt + config.STEP_SIZE)
+            servo.move_tilt(servo.tilt + config.config.STEP_SIZE)
 
     print(
         f"pan={servo.pan}, "
