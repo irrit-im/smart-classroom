@@ -79,11 +79,11 @@ def handle_servo_command(command: str) -> None:
         f"y={y_raw} ({y_offset:+})"
     )
 
-    # deadzone
-    if abs(x_offset) < DEADZONE:
+    # DEADZONE 
+    if abs(x_offset) < config.DEADZONE :
         x_offset = 0
 
-    if abs(y_offset) < DEADZONE:
+    if abs(y_offset) < config.DEADZONE :
         y_offset = 0
 
     # move only the dominant axis
