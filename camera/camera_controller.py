@@ -14,7 +14,7 @@ class CameraController:
 
         self.picam2.configure(
             self.picam2.create_preview_configuration(
-                main={"format": "XRGB8888", "size": (config.CAM_WIDTH, config.CAM_HIGHT)}
+                main={"format": "XRGB8888", "size": (config.CAM_WIDTH, config.CAM_HEIGHT)}
             )
         )
 
