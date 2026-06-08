@@ -22,7 +22,7 @@ JOYSTICK_X_CENTER = 423  # calibrate
 JOYSTICK_Y_CENTER = 419  # calibrate
 
 DEADZONE = 75
-STEP_SIZE = 10
+STEP_SIZE = 2
 
 IMAGE_DIR = "images"
 os.makedirs(IMAGE_DIR, exist_ok=True)
