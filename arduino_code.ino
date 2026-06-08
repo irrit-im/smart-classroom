@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h> // importing UART library for bluetooth
+#include <SoftwareSerial.h> // importing UART library for BLUEtooth
 #include <VoiceRecognitionV3.h> // voice recognition module library
  
 #define R_PIN 10 // RGB LED pins
@@ -9,17 +9,24 @@
 #define yAxisPin A0
 #define joystickButtonPin 4
 
-#define bluetoothRX 5 // Bluetooth pins
-#define bluetoothTX 6
+#define BLUEtoothRX 5 // BLUEtooth pins
+#define BLUEtoothTX 6
 
 #define voiceRecognitionRX 2 // Voice recognition pins
 #define voiceRecognitionTX 3
 #define voiceCommandCount 7 // Number of voice commands stored in the system
- 
-String photo_command = "photo\n"; // BT to Raspberry
+
+const String photo_command = "photo\n"; // BT to Raspberry
+
+// LED color constants
+const byte PURPLE[3] = {255, 0, 255};
+const byte BLUE[3] = {0, 0, 255};
+const byte OFF[3] = {0, 0, 0};
+unsigned long last_LED_change = 0;
+
  
 // BT
-SoftwareSerial hc05(bluetoothRX, bluetoothTX); // Bluetooth object creation
+SoftwareSerial hc05(BLUEtoothRX, BLUEtoothTX); // BLUEtooth object creation
  
 // VR module
 VR myVR(voiceRecognitionRX, voiceRecognitionTX); // Voice recognition object creation
@@ -29,12 +36,13 @@ uint8_t buf[64]; // Buffer to store recognition results
 // Joystick position
 int xPlace;
 int yPlace;
- 
+
+
 void setupSerial(){
   Serial.begin(9600); // Start serial communication with computer
 }
  
-bool setupBluetooth() {
+bool setupBLUEtooth() {
   hc05.begin(38400); // Start serial communication with BT
   return true; // Return success
 }
@@ -57,10 +65,6 @@ void setupVoiceRecognition(){
   records[5] = 5; // עוד וריאציה של צלם
   records[6] = 6; // עוד וריאציה של צלם
 
-
-
-
- 
   for (int i = 0; i < voiceCommandCount; i++) { // Loading commands into module memory
     if (myVR.load(records[i]) >= 0) { // Checks if record can be loaded
       Serial.print("Loaded record ");
@@ -76,7 +80,7 @@ void setupRGB(){
   pinMode(R_PIN, OUTPUT); // Setting RGB light pins as output
   pinMode(G_PIN, OUTPUT);
   pinMode(B_PIN, OUTPUT);
-  digitalWrite(R_PIN, LOW); // Turns off the RGB light at the beginning of the program
+  digitalWrite(R_PIN, LOW); // Turns OFF the RGB light at the beginning of the program
   digitalWrite(G_PIN, LOW);
   digitalWrite(B_PIN, LOW);
 }
@@ -84,7 +88,7 @@ void setupRGB(){
 void setup() {
   pinMode(joystickButtonPin, INPUT);
   setupSerial();
-  if (setupBluetooth()) Serial.println("Bluetooth Ready"); //Make sure the BT can connect
+  if (setupBLUEtooth()) Serial.println("BLUEtooth Ready"); //Make sure the BT can connect
   setupVoiceRecognition();
   setupRGB(); 
 }
@@ -94,7 +98,15 @@ void readJoystick(){
   yPlace = analogRead(yAxisPin);
 }
  
-void sendJoystickBluetooth() {
+
+void colorLED(const byte (&color)[3]){
+  analogWrite(R_PIN, color[0]);
+  analogWrite(G_PIN, color[1]);
+  analogWrite(B_PIN, color[2]);
+  last_LED_change = millis();
+}
+
+void sendJoystickBLUEtooth() {
   hc05.print(xPlace); // Sends joystick values
   hc05.print(",");
   hc05.print(yPlace);
@@ -103,25 +115,9 @@ void sendJoystickBluetooth() {
   Serial.print(",");
   Serial.print(yPlace);
   Serial.print("\n");
-  blinkLEDColor("blue");
+  colorLED(BLUE);
 }
- 
-void blinkLEDColor(String color) {
-  if (color == "purple") {
-    digitalWrite(R_PIN, HIGH); // Color purple = red + blue
-    digitalWrite(G_PIN, LOW);
-    digitalWrite(B_PIN, HIGH);
-  }
-  if (color == "blue") {
-    analogWrite(R_PIN, 0);
-    analogWrite(G_PIN, 0);
-    analogWrite(B_PIN, 255);
-  }
-  delay(1000); // Light on for a second
-  digitalWrite(R_PIN, LOW); // Turn off RGB LED
-  digitalWrite(G_PIN, LOW);
-  digitalWrite(B_PIN, LOW);
-}
+
  
 void handleVoiceCommand() {
   int recognized = myVR.recognize(buf, 50); // Attempts to recognize a voice command and stores the result in buf
@@ -132,14 +128,15 @@ void handleVoiceCommand() {
  
     if (command >= 0) { // If a valid command was found
       hc05.println(photo_command); // Send photo command to Raspberry Pi
-      blinkLEDColor("purple"); // Turn on RGB LED
+      colorLED(PURPLE); // Turn on RGB LED
     }
   }
 }
  
 void loop() { // Runs the program
   readJoystick();
-  if (digitalRead(joystickButtonPin)==LOW) sendJoystickBluetooth();
+  if (digitalRead(joystickButtonPin)==LOW) sendJoystickBLUEtooth();
   handleVoiceCommand();
+  if (millis()-last_LED_change > 1000) colorLED(OFF);
   delay(20); // 50Hz update rate
 }
