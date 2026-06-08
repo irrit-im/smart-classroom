@@ -24,5 +24,5 @@ BT_PORT = "/dev/rfcomm0"
 JOYSTICK_X_CENTER = 423  # calibrate
 JOYSTICK_Y_CENTER = 419  # calibrate
 DEADZONE = 75
-STEP_SIZE = 2
+STEP_SIZE = 5
 
