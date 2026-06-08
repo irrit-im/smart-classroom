@@ -18,6 +18,12 @@ import os
 import threading
 import time
 
+JOYSTICK_X_CENTER = 423  # calibrate
+JOYSTICK_Y_CENTER = 419  # calibrate
+
+DEADZONE = 75
+STEP_SIZE = 10
+
 IMAGE_DIR = "images"
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
@@ -47,9 +53,6 @@ def get_servo_controller() -> ServoController:
     return servo
 
 
-def joystick_to_servo_pos(deg: int) -> int:
-    return min(180, max(1, deg/512 * 180))
-
 def handle_photo_command() -> None:
     camera = get_camera()
     # wait until first frame is ready
@@ -60,7 +63,6 @@ def handle_photo_command() -> None:
 
     print("Captured image")
 
-
 def handle_servo_command(command: str) -> None:
 
     global servo_control_mode
@@ -68,15 +70,47 @@ def handle_servo_command(command: str) -> None:
     if servo_control_mode != ControlMode.BT:
         return
 
-    cords = command.split(",")
-    x = joystick_to_servo_pos(int(cords[0]))
-    y = joystick_to_servo_pos(int(cords[1]))
+    try:
+        x_raw, y_raw = map(int, command.split(","))
+    except (ValueError, IndexError):
+        return
 
     servo = get_servo_controller()
-    
-    servo.move_pan(x)
-    servo.move_tilt(y)
-    
+
+    x_offset = x_raw - JOYSTICK_X_CENTER
+    y_offset = y_raw - JOYSTICK_Y_CENTER
+
+    print(
+        f"x={x_raw} ({x_offset:+}), "
+        f"y={y_raw} ({y_offset:+})"
+    )
+
+    # deadzone
+    if abs(x_offset) < DEADZONE:
+        x_offset = 0
+
+    if abs(y_offset) < DEADZONE:
+        y_offset = 0
+
+    # move only the dominant axis
+    if abs(x_offset) > abs(y_offset):
+
+        if x_offset > 0:
+            servo.move_pan(servo.pan + STEP_SIZE)
+        else:
+            servo.move_pan(servo.pan - STEP_SIZE)
+
+    elif abs(y_offset) > 0:
+
+        if y_offset > 0:
+            servo.move_tilt(servo.tilt - STEP_SIZE)
+        else:
+            servo.move_tilt(servo.tilt + STEP_SIZE)
+
+    print(
+        f"pan={servo.pan}, "
+        f"tilt={servo.tilt}"
+    )
 
 def handle_bt_line(line) -> None:
 

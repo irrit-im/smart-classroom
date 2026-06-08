@@ -40,13 +40,12 @@ class ServoController:
 
         self.pi.set_servo_pulsewidth(pin, pulse)
 
+
     def move_pan(self, angle):
-        angle = 180-angle
         self.pan_angle = angle
-        self.move_servo(self.PAN_PIN, angle)
-
+        self.move_servo(self.PAN_PIN, 180 - angle)
+        
     def move_tilt(self, angle):
-
         self.tilt_angle = angle
         self.move_servo(self.TILT_PIN, angle)
 
@@ -54,3 +53,11 @@ class ServoController:
 
         self.pi.set_servo_pulsewidth(self.PAN_PIN, 0)
         self.pi.set_servo_pulsewidth(self.TILT_PIN, 0)
+
+    @property
+    def pan(self):
+        return self.pan_angle
+
+    @property
+    def tilt(self):
+        return self.tilt_angle
