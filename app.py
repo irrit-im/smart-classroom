@@ -13,19 +13,13 @@ from camera.streamer import generate_stream
 from bt_listener import BTListener
 from servo_controller import ServoController, ControlMode
 from lcd_adress_display import lcd_display
+import config
 
 import os
 import threading
 import time
 
-JOYSTICK_X_CENTER = 423  # calibrate
-JOYSTICK_Y_CENTER = 419  # calibrate
-
-DEADZONE = 75
-STEP_SIZE = 2
-
-IMAGE_DIR = "images"
-os.makedirs(IMAGE_DIR, exist_ok=True)
+os.makedirs(config.IMAGE_DIR, exist_ok=True)
 
 servo_control_mode = ControlMode.NONE
 
@@ -59,7 +53,7 @@ def handle_photo_command() -> None:
     while camera.get_frame() is None:
         time.sleep(0.1)
 
-    filename = camera.capture_image(IMAGE_DIR)
+    filename = camera.capture_image(config.IMAGE_DIR)
 
     print("Captured image")
 
@@ -77,8 +71,8 @@ def handle_servo_command(command: str) -> None:
 
     servo = get_servo_controller()
 
-    x_offset = x_raw - JOYSTICK_X_CENTER
-    y_offset = y_raw - JOYSTICK_Y_CENTER
+    x_offset = x_raw - config.JOYSTICK_X_CENTER
+    y_offset = y_raw - config.JOYSTICK_Y_CENTER
 
     print(
         f"x={x_raw} ({x_offset:+}), "
@@ -96,16 +90,16 @@ def handle_servo_command(command: str) -> None:
     if abs(x_offset) > abs(y_offset):
 
         if x_offset > 0:
-            servo.move_pan(servo.pan + STEP_SIZE)
+            servo.move_pan(servo.pan + config.STEP_SIZE)
         else:
-            servo.move_pan(servo.pan - STEP_SIZE)
+            servo.move_pan(servo.pan - config.STEP_SIZE)
 
     elif abs(y_offset) > 0:
 
         if y_offset > 0:
-            servo.move_tilt(servo.tilt - STEP_SIZE)
+            servo.move_tilt(servo.tilt - config.STEP_SIZE)
         else:
-            servo.move_tilt(servo.tilt + STEP_SIZE)
+            servo.move_tilt(servo.tilt + config.STEP_SIZE)
 
     print(
         f"pan={servo.pan}, "
@@ -163,7 +157,7 @@ def video_feed():
 @app.route("/images")
 def images_page():
 
-    images = sorted(os.listdir(IMAGE_DIR), reverse=True)
+    images = sorted(os.listdir(config.IMAGE_DIR), reverse=True)
 
     return render_template("images.html", images=images)
 
@@ -171,7 +165,7 @@ def images_page():
 @app.route("/capture")
 def capture():
 
-    filename = get_camera().capture_image(IMAGE_DIR)
+    filename = get_camera().capture_image(config.IMAGE_DIR)
 
     return redirect(url_for("images_page"))
 
@@ -185,7 +179,7 @@ def view_image(filename):
 @app.route("/images/<filename>")
 def serve_image(filename):
 
-    return send_from_directory(IMAGE_DIR, filename)
+    return send_from_directory(config.IMAGE_DIR, filename)
 
 @app.route("/move_servo", methods=["POST"])
 def move_servo():
