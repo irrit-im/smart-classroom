@@ -30,7 +30,7 @@ class ServoController:
         self.move_tilt(self.tilt_angle)
 
     def angle_to_pulsewidth(self, angle):
-        return 1000 + (angle / 180.0) * 1000
+        return 500 + (angle / 180.0) * 2000
 
     def move_servo(self, pin, angle):
 
