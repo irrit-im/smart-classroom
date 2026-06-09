@@ -10,9 +10,6 @@ CAM_WIDTH = 640
 CAM_HEIGHT = 480
 FRAME_RATE = 4
 
-# directory for storing images (relative path)
-IMAGE_DIR = "images"
-
 # bluetooth port
 BT_PORT = "/dev/rfcomm0"
 
